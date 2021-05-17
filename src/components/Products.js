@@ -27,7 +27,7 @@ class Products extends Component {
     const { product } = this.state;
     return (
       <div>
-        <Fade bottom cascade>
+        <Fade left cascade>
           {!this.props.products ? (
             <div>Loading...</div>
           ) : (

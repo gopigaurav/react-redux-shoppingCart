@@ -1,13 +1,13 @@
 import { CREATE_ORDER, CLEAR_ORDER, FETCH_ORDERS } from "../types";
 
-const orderReducer = (state = {}, action) => {
+const orderReducer = (state ={ orders : [JSON.parse(localStorage.getItem("orders"))]}, action) => {
   switch (action.type) {
     case CREATE_ORDER:
-      return { order: action.payload };
+      return { ...state, orders: state.orders.concat(action.payload)};
     case CLEAR_ORDER:
       return { order: null };
     case FETCH_ORDERS:
-      return { orders: action.payload };
+      return state;
     default:
       return state;
   }

@@ -4,8 +4,10 @@ import Fade from "react-reveal/Fade";
 import { connect } from "react-redux";
 import Modal from "react-modal";
 import Zoom from "react-reveal/Zoom";
-import { removeFromCart } from "../actions/cartActions";
+import { removeFromCart, clearCart } from "../actions/cartActions";
 import { createOrder, clearOrder } from "../actions/orderActions";
+import { Link } from "react-router-dom";
+import { withRouter } from "react-router-dom";
 
 class Cart extends Component {
   constructor(props) {
@@ -17,6 +19,7 @@ class Cart extends Component {
       showCheckout: false,
     };
   }
+
   handleInput = (e) => {
     this.setState({ [e.target.name]: e.target.value });
   };
@@ -29,7 +32,12 @@ class Cart extends Component {
       cartItems: this.props.cartItems,
       total: this.props.cartItems.reduce((a, c) => a + c.price * c.count, 0),
     };
+    console.log(order, "orderSummary");
+    localStorage.getItem("orders",[])
+    localStorage.setItem("orders", JSON.stringify(order))
     this.props.createOrder(order);
+    this.props.clearCart();
+    this.props.history.push("/admin");
   };
   closeModal = () => {
     this.props.clearOrder();
@@ -187,10 +195,12 @@ class Cart extends Component {
   }
 }
 
-export default connect(
-  (state) => ({
-    order: state.order.order,
-    cartItems: state.cart.cartItems,
-  }),
-  { removeFromCart, createOrder, clearOrder }
-)(Cart);
+export default withRouter(
+  connect(
+    (state) => ({
+      order: state.order.order,
+      cartItems: state.cart.cartItems,
+    }),
+    { removeFromCart, createOrder, clearOrder, clearCart }
+  )(Cart)
+);
